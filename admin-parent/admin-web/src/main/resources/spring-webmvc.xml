@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!--配置自动扫描包，扫描controller-->
+    <context:component-scan base-package="com.wen.crowd.mvc"/>
+
+    <!--配置视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="resourceViewResolver">
+        <property name="prefix" value="/WEB-INF/"/>
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!--配置基于SpringMVC注解驱动-->
+    <mvc:annotation-driven/>
+    <!--过滤静态资源-->
+    <mvc:default-servlet-handler/>
+    <!--<mvc:resources mapping="/bootstrap/**" location="/bootstrap/"/>
+    <mvc:resources mapping="/css/**" location="/css/"/>
+    <mvc:resources mapping="/fonts/**" location="/fonts/"/>
+    <mvc:resources mapping="/jquery/**" location="/jquery/"/>
+    <mvc:resources mapping="/script/**" location="/script/"/>
+    <mvc:resources mapping="/ztree/**" location="/ztree/"/>-->
+    <!--配置基于XML的异常处理映射机制-->
+    <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" id="exceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="com.wen.crowd.exception.LoginFailedException">admin-login</prop>
+                <prop key="com.wen.crowd.exception.AccessForbiddenException">admin-login</prop>
+                <prop key="com.wen.crowd.exception.LoginAcctAlreadyInUseException">admin-add</prop>
+                <prop key="com.wen.crowd.exception.LoginAcctAlreadyInUseForUpdateException">system-error</prop>
+                <!--<prop key="java.lang.Exception">system-error</prop>-->
+            </props>
+        </property>
+    </bean>
+   <!-- 配置view-controller将请求和视图关联，不必写handler方法
+    这种方式适用于纯跳转页面，不用携带任何数据
+    <mvc:view-controller path="/admin/toLoginPage" view-name="admin-login"/>
+    <mvc:view-controller path="/admin/toMainPage" view-name="admin-main"/>
+    <mvc:view-controller path="/admin/toAddPage" view-name="admin-add"/>
+    <mvc:view-controller path="/role/to/page" view-name="role-page"/>-->
+
+    <!--注册拦截器-->
+  <!--  <mvc:interceptors>
+        <mvc:interceptor>
+            &lt;!&ndash;mvc:mapping配置要拦截的资源
+            /*对应一层路径
+            /**对应多层路径&ndash;&gt;
+            <mvc:mapping path="/**"/>
+            &lt;!&ndash;mvc:exclude-mapping配置不需要拦截的资源&ndash;&gt;
+            <mvc:exclude-mapping path="/"/>&lt;!&ndash;首页&ndash;&gt;
+            <mvc:exclude-mapping path="/admin/login"/>&lt;!&ndash;登录操作&ndash;&gt;
+            <mvc:exclude-mapping path="/admin/toLoginPage"/>&lt;!&ndash;登录页面&ndash;&gt;
+            &lt;!&ndash;配置拦截器的类&ndash;&gt;
+            <bean class="com.wen.crowd.mvc.interceptor.LoginInterceptor" id="loginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>-->
+
+</beans>
