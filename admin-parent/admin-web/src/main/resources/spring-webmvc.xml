@@ -16,12 +16,15 @@
     <mvc:annotation-driven/>
     <!--过滤静态资源-->
     <mvc:default-servlet-handler/>
-    <!--<mvc:resources mapping="/bootstrap/**" location="/bootstrap/"/>
+    <mvc:resources mapping="/bootstrap/**" location="/bootstrap/"/>
     <mvc:resources mapping="/css/**" location="/css/"/>
     <mvc:resources mapping="/fonts/**" location="/fonts/"/>
+    <mvc:resources mapping="/img/**" location="/img/"/>
     <mvc:resources mapping="/jquery/**" location="/jquery/"/>
     <mvc:resources mapping="/script/**" location="/script/"/>
-    <mvc:resources mapping="/ztree/**" location="/ztree/"/>-->
+    <mvc:resources mapping="/ztree/**" location="/ztree/"/>
+    <mvc:resources mapping="/layer/**" location="/layer/"/>
+    <mvc:resources mapping="/self/**" location="/self/"/>
     <!--配置基于XML的异常处理映射机制-->
     <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" id="exceptionResolver">
         <property name="exceptionMappings">
@@ -34,27 +37,27 @@
             </props>
         </property>
     </bean>
-   <!-- 配置view-controller将请求和视图关联，不必写handler方法
-    这种方式适用于纯跳转页面，不用携带任何数据
+    <!--配置view-controller将请求和视图关联，不必写handler方法
+    这种方式适用于纯跳转页面，不用携带任何数据-->
     <mvc:view-controller path="/admin/toLoginPage" view-name="admin-login"/>
     <mvc:view-controller path="/admin/toMainPage" view-name="admin-main"/>
     <mvc:view-controller path="/admin/toAddPage" view-name="admin-add"/>
-    <mvc:view-controller path="/role/to/page" view-name="role-page"/>-->
+    <mvc:view-controller path="/role/to/page" view-name="role-page"/>
 
     <!--注册拦截器-->
-  <!--  <mvc:interceptors>
+    <mvc:interceptors>
         <mvc:interceptor>
-            &lt;!&ndash;mvc:mapping配置要拦截的资源
+            <!--mvc:mapping配置要拦截的资源
             /*对应一层路径
-            /**对应多层路径&ndash;&gt;
+            /**对应多层路径-->
             <mvc:mapping path="/**"/>
-            &lt;!&ndash;mvc:exclude-mapping配置不需要拦截的资源&ndash;&gt;
-            <mvc:exclude-mapping path="/"/>&lt;!&ndash;首页&ndash;&gt;
-            <mvc:exclude-mapping path="/admin/login"/>&lt;!&ndash;登录操作&ndash;&gt;
-            <mvc:exclude-mapping path="/admin/toLoginPage"/>&lt;!&ndash;登录页面&ndash;&gt;
-            &lt;!&ndash;配置拦截器的类&ndash;&gt;
-            <bean class="com.wen.crowd.mvc.interceptor.LoginInterceptor" id="loginInterceptor"/>
+            <!--mvc:exclude-mapping配置不需要拦截的资源-->
+            <mvc:exclude-mapping path="/"/><!--首页-->
+            <mvc:exclude-mapping path="/admin/login"/><!--登录操作-->
+            <mvc:exclude-mapping path="/admin/toLoginPage"/><!--登录页面-->
+            <!--配置拦截器的类-->
+            <bean class="com.wen.crowd.mvc.interceptor.LoginInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>-->
+    </mvc:interceptors>
 
 </beans>

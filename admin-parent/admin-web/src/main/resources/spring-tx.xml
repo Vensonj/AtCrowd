@@ -18,7 +18,7 @@
         <aop:advisor advice-ref="txAdvice" pointcut-ref="point-cut"/>
     </aop:config>
     <!--配置事务通知-->
-    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:advice id="txAdvice">
         <tx:attributes>
             <!--查询方法配置只读，可以起到一定的优化-->
             <tx:method name="get*" read-only="true"/>

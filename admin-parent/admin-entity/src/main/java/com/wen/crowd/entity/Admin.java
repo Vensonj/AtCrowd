@@ -19,15 +19,16 @@ public class Admin {
     public Admin() {
     }
 
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
     public Admin(Integer id, String loginAcct, String userPwd, String userName, String email) {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         this.id = id;
         this.loginAcct = loginAcct;
         this.userPwd = userPwd;
         this.userName = userName;
         this.email = email;
-        this.createTime = sdf.format(new Date());
+        this.createTime = simpleDateFormat.format(date);
     }
 
     public Integer getId() {
@@ -74,9 +75,9 @@ public class Admin {
         return createTime;
     }
 
-    /*public void setCreateTime(String createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
-    }*/
+    }
 
     @Override
     public String toString() {

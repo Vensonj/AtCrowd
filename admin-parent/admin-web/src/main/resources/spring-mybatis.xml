@@ -21,22 +21,22 @@
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
         <!--装配数据源-->
         <property name="dataSource" ref="druidDataSource"/>
-        <!--配置插件-->
-        <!-- <property name="plugins">
-             <array>
-                 &lt;!&ndash;配置分页插件PageHelper&ndash;&gt;
-                 <bean class="com.github.pagehelper.PageInterceptor">
-                     <property name="properties">
-                         <props>
-                             &lt;!&ndash;配置数据库方言，告诉PageHelper当前使用的数据库&ndash;&gt;
-                             <prop key="helperDialect">mysql</prop>
-                             &lt;!&ndash;配置页码的合理化修正，在1~总页码之间修正页码&ndash;&gt;
-                             <prop key="reasonable">true</prop>
-                         </props>
-                     </property>
-                 </bean>
-             </array>
-         </property>-->
+        <!--配置插件--> <property name="plugins">
+        <array>
+            <!--配置分页插件PageHelper-->
+            <bean class="com.github.pagehelper.PageInterceptor">
+                <property name="properties">
+                    <props>
+                        <!--配置数据库方言，告诉PageHelper当前使用的数据库-->
+                        <prop key="helperDialect">mysql</prop>
+                        <!--配置页码的合理化修正，在1~总页码之间修正页码-->
+                        <prop key="reasonable">true</prop>
+                    </props>
+                </property>
+            </bean>
+        </array>
+    </property>
+
     </bean>
 
     <!--配置MapperScannerConfigurer类扫描mapper接口所在的包-->
