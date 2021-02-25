@@ -1,4 +1,3 @@
-
 <%--
   Created by IntelliJ IDEA.
   User: Administrator
@@ -10,15 +9,27 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <%@include file="include-head.jsp" %>
+<link rel="stylesheet" href="css/pagination.css">
+<script type="text/javascript" src="jquery/jquery.pagination.js"></script>
 <script type="text/javascript" src="self/my-role.js"></script>
 <script type="text/javascript">
-    $(function (){
+    $(function () {
         // 1、为分页操作准备初始化数据
-        window.pageNum=1;
-        window.pageSize=7;
-        window.keyword="";
+        window.pageNum = 1;
+        window.pageSize = 7;
+        window.keyword = "";
         // 2、调用分页函数，实现分页效果
         generatePage();
+        // 给查询按钮绑定单击函数
+        $("#searchBtn").click(function () {
+            window.keyword = $("#keywordInput").val();
+            generatePage();
+        })
+        // 点击新增按钮弹出模态框
+        $("#addBtn").click(function (){
+            $("#addModal").modal("show")
+        })
+
     })
 </script>
 <body>
@@ -36,17 +47,19 @@
                         <div class="form-group has-feedback">
                             <div class="input-group">
                                 <div class="input-group-addon">查询条件</div>
-                                <input class="form-control has-success" type="text" placeholder="请输入查询条件">
+                                <input id="keywordInput" class="form-control has-success" type="text"
+                                       placeholder="请输入查询条件">
                             </div>
                         </div>
-                        <button type="button" class="btn btn-warning"><i class="glyphicon glyphicon-search"></i> 查询
+                        <button id="searchBtn" type="button" class="btn btn-warning"><i
+                                class="glyphicon glyphicon-search"></i> 查询
                         </button>
                     </form>
                     <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
                             class=" glyphicon glyphicon-remove"></i> 删除
                     </button>
-                    <button type="button" class="btn btn-primary" style="float:right;"
-                            onclick="window.location.href='form.html'"><i class="glyphicon glyphicon-plus"></i> 新增
+                    <button id="addBtn" type="button" class="btn btn-primary" style="float:right"><i
+                            class="glyphicon glyphicon-plus"></i> 新增
                     </button>
                     <br>
                     <hr style="clear:both;">
@@ -60,40 +73,13 @@
                                 <th width="100">操作</th>
                             </tr>
                             </thead>
-                            <tbody id="rolePageBody">
-                            <c:if test="${! empty requestScope.pageInfo.list}">
-                                <c:forEach items="${requestScope.pageInfo.list}" var="role" varStatus="myStatus">
-                                    <tr>
-                                        <td>${myStatus}</td>
-                                        <td><input type="checkbox"></td>
-                                        <td>${role.name}</td>
-                                        <td>
-                                            <a href="" class="btn btn-success btn-xs"><i
-                                                    class=" glyphicon glyphicon-check"></i></a>
-                                            <a href="" class="btn btn-primary btn-xs"><i
-                                                    class=" glyphicon glyphicon-pencil"></i></a>
-                                            <a href="" class="btn btn-danger btn-xs"><i
-                                                    class=" glyphicon glyphicon-remove"></i></a>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </c:if>
-                            </tbody>
+                            <tbody id="rolePageBody"></tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="6" align="center">
-                                    <ul class="pagination">
-                                        <li class="disabled"><a href="#">上一页</a></li>
-                                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                                        <li><a href="#">2</a></li>
-                                        <li><a href="#">3</a></li>
-                                        <li><a href="#">4</a></li>
-                                        <li><a href="#">5</a></li>
-                                        <li><a href="#">下一页</a></li>
-                                    </ul>
+                                    <div id="Pagination" class="pagination"></div>
                                 </td>
                             </tr>
-
                             </tfoot>
                         </table>
                     </div>
@@ -103,4 +89,6 @@
     </div>
 </div>
 </body>
+
+<%@include file="modal.jsp"%>
 </html>
