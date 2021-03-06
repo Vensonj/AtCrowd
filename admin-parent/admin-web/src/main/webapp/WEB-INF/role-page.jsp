@@ -105,7 +105,48 @@
             // 关闭模态框
             $("#editModal").modal("hide");
         })
+        //测试代码
+        // var roleArray = [{roleId:123,roleName:"11111"},{roleId:1233,roleName:"11333111"}]
+        // confirmDelete(roleArray);
+        // 8、给批量删除 确认删除模态框中的按钮的单击事件
+        $("#confirmDeleteRoleBtn").click(function () {
+            // 将Json的数组装换为Json的字符串
+            var s = JSON.stringify(window.roleIdArray);
+            $.ajax({
+                url: "role/removeRole",
+                type: "post",
+                data: s,
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = response.result;
+                    if (result === "SUCCESS") {
+                        layer.msg("删除数据成功")
+                        // 如果添加成功，重新加载分页
+                        generatePage();
+                    }
+                    if (result === "FAILED") {
+                        layer.msg("删除操作失败" + response.message)
+                    }
+                },
+                error: function (response) {
+                    layer.msg(response.status + "" + response.text)
+                }
+            })
+            // 关闭模态框
+            $("#confirmModal").modal("hide");
+        })
+        // 9.给单条删除绑定单击事件
+        $("#rolePageBody").on("click", ".removeBtn", function () {
+            let roleName = $(this).parent().prev().text();
+            var roleArray = [{
+                roleId: this.id,
+                roleName: roleName
+            }];
+            // 弹出更新的模态框
+            confirmDelete(roleArray);
 
+        })
     })
 </script>
 <body>
@@ -144,7 +185,7 @@
                             <thead>
                             <tr>
                                 <th width="30">#</th>
-                                <th width="30"><input type="checkbox"></th>
+                                <th width="30"><input id="summaryBox" type="checkbox"></th>
                                 <th>名称</th>
                                 <th width="100">操作</th>
                             </tr>
@@ -168,4 +209,5 @@
 
 <%@include file="modal-role-add.jsp" %>
 <%@include file="modal-role-edit.jsp" %>
+<%@include file="modal-role-confirmDelete.jsp" %>
 </html>

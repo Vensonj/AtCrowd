@@ -1,3 +1,25 @@
+// 创建用于显示确认删除角色信息时的提示模态框
+function confirmDelete(roleArray) {
+    // 打开模态框
+    $("#confirmModal").modal("show");
+    //清空旧数据
+    $("#confirmDeleteMessage").empty();
+
+    //全局变量创建数组来处存待删除的角色数组
+    window.roleIdArray = [];
+
+    //遍历roleArray数组并将数组中的元素添加到要显示的选择器中
+    for (var i = 0; i < roleArray.length; i++) {
+        var role = roleArray[i];
+        var roleId = role.roleId;
+        var roleName = role.roleName;
+        $("#confirmDeleteMessage").append(roleId + "&nasp"+roleName + "<br/>")
+
+        window.roleIdArray.push(roleId);
+    }
+}
+
+
 // 执行分页，生成页面效果，任何时候调用这个函数都会重新加载页面
 function generatePage() {
     // 1、获取分页数据
@@ -49,7 +71,7 @@ function fillTBody(pageInfo) {
         var roleNameTd = "<td>" + roleName + "</td>";
         var checkBtn = "<button type='button' class='btn btn-success btn-xs'><i class='glyphicon glyphicon-check'></i></button>";
         var pencilBtn = "<button id='" + roleId + "' type='button' class='btn btn-primary btn-xs pencilBtn'><i class='glyphicon glyphicon-pencil'></i></button>";
-        var removeBtn = "<button type='button' class='btn btn-danger btn-xs'><i class='glyphicon glyphicon-remove'></i></button>";
+        var removeBtn = "<button id='" + roleId + "' type='button' class='btn btn-danger btn-xs removeBtn'><i class='glyphicon glyphicon-remove'></i></button>";
         var buttonTd = "<td>" + checkBtn + " " + pencilBtn + " " + removeBtn + "</td>";
         var tr = "<tr>" + numberTd + checkboxTd + roleNameTd + buttonTd + "</tr>";
         $("#rolePageBody").append(tr);
