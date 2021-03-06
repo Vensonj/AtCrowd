@@ -20,14 +20,90 @@
         window.keyword = "";
         // 2、调用分页函数，实现分页效果
         generatePage();
-        // 给查询按钮绑定单击函数
+        // 3、给查询按钮绑定单击函数
         $("#searchBtn").click(function () {
             window.keyword = $("#keywordInput").val();
             generatePage();
         })
-        // 点击新增按钮弹出模态框
-        $("#addBtn").click(function (){
+        //4、 点击新增按钮弹出模态框
+        $("#addBtn").click(function () {
             $("#addModal").modal("show")
+        })
+        //5、 点击模态框的保存按钮保存数据到数据库
+        $("#savaRoleBtn").click(function () {
+            // 获取要添加的角色名
+            let roleName = $.trim($("#addModal [name=roleName]").val());
+            $.ajax({
+                url: "role/saveRole",
+                type: "post",
+                data: {
+                    name: roleName
+                },
+                dataType: "json",
+                success: function (response) {
+                    var result = response.result;
+                    if (result === "SUCCESS") {
+                        layer.msg("添加数据成功")
+                        // 如果添加成功，重新加载分页，并定位到新增数据
+                        window.pageNum = 999999;
+                        generatePage();
+                    }
+                    if (result === "FAILED") {
+                        layer.msg("添加数据失败" + response.message)
+                    }
+                },
+                error: function (response) {
+                    layer.msg(response.status + "" + response.text)
+                }
+            })
+            // 关闭模态框
+            $("#addModal").modal("hide");
+            // 清理模态框中的内容
+            $("#addModal [name=roleName]").val("");
+        })
+
+        // 6、给“铅笔按钮”即更新按钮绑定单击事件函数,因为这个图标是动态生成的，每次翻页绑定的单击函数都会消失
+        // 所以使用Jquery的on函数解决，找到动态生成的内容的父级静态
+        // on 函数的第一个参数是 要执行的时间类型
+        // on 函数的第二个参数是 要绑定单击事件的元素选择器
+        $("#rolePageBody").on("click", ".pencilBtn", function () {
+            // 弹出更新的模态框
+            $("#editModal").modal("show");
+            // 获取要更新的角色名（数据回显）使用Dom来获取 this 代表当前对象，这里就是当前的更新按钮
+            let roleName = $(this).parent().prev().text();
+            window.roleId = this.id;
+            // 将数据回显到模态框
+            $("#editModal [name=roleName]").val(roleName);
+        })
+        //7、点击模态框的更新按钮更新数据到数据库
+        $("#updateRoleBtn").click(function () {
+            // 从文本框中取出角色名
+            let roleName = $.trim($("#editModal [name=roleName]").val());
+            $.ajax({
+                url: "role/updateRole",
+                type: "post",
+                data: {
+                    id: window.roleId,
+                    name: roleName,
+                },
+                dataType: "json",
+                success: function (response) {
+                    var result = response.result;
+                    if (result === "SUCCESS") {
+                        layer.msg("更新数据成功")
+                        // 如果添加成功，重新加载分页
+                        generatePage();
+                    }
+                    if (result === "FAILED") {
+                        layer.msg("更新操作失败" + response.message)
+                    }
+                },
+                error: function (response) {
+                    layer.msg(response.status + "" + response.text)
+                }
+            })
+            // 关闭模态框
+            $("#editModal").modal("hide");
         })
 
     })
@@ -90,5 +166,6 @@
 </div>
 </body>
 
-<%@include file="modal.jsp"%>
+<%@include file="modal-role-add.jsp" %>
+<%@include file="modal-role-edit.jsp" %>
 </html>

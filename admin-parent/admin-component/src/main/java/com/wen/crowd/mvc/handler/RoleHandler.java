@@ -20,6 +20,30 @@ public class RoleHandler {
 	@Autowired
 	RoleService roleService;
 
+	/**
+	 * 更新角色信息
+	 * @param role 需要更新的角色
+	 * @return 返回成功或失败的信息
+	 */
+	@ResponseBody
+	@RequestMapping("/role/updateRole")
+	public ResultEntity<String> updateRole(Role role){
+		roleService.updateRole(role);
+		return ResultEntity.successWithoutData();
+	}
+
+	/**
+	 * 添加角色
+	 * @param role 要添加的角色
+	 * @return 返回成功或失败的数据
+	 */
+	@ResponseBody
+	@RequestMapping("/role/saveRole")
+	public ResultEntity<String> saveRole(Role role){
+		roleService.saveRole(role);
+		return ResultEntity.successWithoutData();
+	}
+
 	/*
 	按照Ajax请求返回数据
 	 */

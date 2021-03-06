@@ -5,7 +5,7 @@
   Time: 16:11
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <div id="addModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -18,13 +18,15 @@
                 <form class="form-inline" role="form">
                     <div class="form-group has-feedback">
                         <div class="input-group">
-                            <input name="roleName" id="keywordInput" class="form-control has-success" type="text" placeholder="请输入角色名称">
+                            <label for="keywordInput"></label>
+                            <input name="roleName" id="keywordInput" class="form-control has-success" type="text"
+                                   placeholder="请输入角色名称"/>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">保存</button>
+                <button id="savaRoleBtn" type="button" class="btn btn-primary">保存</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

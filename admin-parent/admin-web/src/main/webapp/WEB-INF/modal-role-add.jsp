@@ -26,7 +26,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">保存</button>
+                <button id="savaRoleBtn" type="button" class="btn btn-primary">保存</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
