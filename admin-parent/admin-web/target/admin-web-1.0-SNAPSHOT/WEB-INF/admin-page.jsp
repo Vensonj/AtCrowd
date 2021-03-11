@@ -105,15 +105,16 @@
                                         <td>${admin.userName}</td>
                                         <td>${admin.email}</td>
                                         <td>
-                                            <button type="button" class="btn btn-success btn-xs">
+                                            <a href="<c:url value="/assign/toAssignRolePage?adminId=${admin.id}&pageNum=${pageInfo.pageNum}&keyword=${param.keyword}"/>"
+                                               class="btn btn-success btn-xs">
                                                 <i class=" glyphicon glyphicon-check"></i>
-                                            </button>
+                                            </a>
                                             <a class="btn btn-primary btn-xs" href="<c:url
                                                 value="/admin/toEditPage?adminId=${admin.id}&pageNum=${pageInfo.pageNum}&keyword=${param.keyword}"/>">
                                                 <i class=" glyphicon glyphicon-pencil"></i>
                                             </a>
                                             <a class="btn btn-danger btn-xs"
-                                                href="/admin/remove/${admin.id}/${pageInfo.pageNum}/${param.keyword}">
+                                               href="/admin/remove/${admin.id}/${pageInfo.pageNum}/${param.keyword}">
                                                 <i class=" glyphicon glyphicon-remove"></i>
                                             </a>
                                         </td>

@@ -11,7 +11,10 @@
 <%@include file="include-head.jsp" %>
 <link rel="stylesheet" href="css/pagination.css">
 <script type="text/javascript" src="jquery/jquery.pagination.js"></script>
+<link rel="stylesheet" href="ztree/zTreeStyle.css"/>
+<script type="text/javascript" src="ztree/jquery.ztree.all-3.5.min.js"></script>
 <script type="text/javascript" src="self/my-role.js"></script>
+
 <script type="text/javascript">
     $(function () {
         // 1、为分页操作准备初始化数据
@@ -135,6 +138,8 @@
             })
             // 关闭模态框
             $("#confirmModal").modal("hide");
+            // 批量删除完成后，将总的单选框取消选中
+            $("#summaryBox").prop("checked", false)
         })
         // 9.给单条删除绑定单击事件
         $("#rolePageBody").on("click", ".removeBtn", function () {
@@ -146,6 +151,98 @@
             // 弹出更新的模态框
             confirmDelete(roleArray);
 
+        })
+
+        //10.全选
+        $("#summaryBox").click(function () {
+
+            let currentCheckStatus = this.checked;
+            // 用当前多选框的状态设置当前页其他多选框的状态
+            $(".itemBox").prop("checked", currentCheckStatus);
+        })
+        // 11.全选全不选
+        $("#rolePageBody").on("click", ".itemBox", function () {
+            // 当前已选中的Box数量
+            var currentBoxCount = $(".itemBox:checked").length;
+            // 获取当前页全部的BoxCount
+            var totalBoxCount = $(".itemBox").length;
+            // 使用二者的比较结果设置总的Box
+            $("#summaryBox").prop("checked", currentBoxCount === totalBoxCount);
+
+        })
+        // 12.给批量删除的按钮绑定单击事件
+        $("#batchDelete").click(function () {
+            // 声明一个数组来存放已选中的要删除的对象
+            var roleArray = [];
+            // 遍历当前选中的多选框
+            $(".itemBox:checked").each(function () {
+                var roleId = this.id;
+                var roleName = $(this).parent().next().text();
+                roleArray.push({
+                    "roleId": roleId,
+                    "roleName": roleName
+                })
+            })
+            // 检查roleArray的长度是否为 0
+            if (roleArray.length === 0) {
+                layer.msg("请至少选择一个删除！！！")
+                return;
+            }
+            confirmDelete(roleArray)
+
+        })
+
+        // 13.给分配权限的按钮绑定单击事件
+        $("#rolePageBody").on("click", ".checkBtn", function () {
+            window.roleId = this.id;
+            // 打开模态框
+            $("#assignModal").modal("show");
+
+            // 在模态框中装在 auth 的树形结构数据
+            fillAuthTree();
+        })
+
+        // 14.给分配权限的模态框中的 OK 按钮绑定单击事件
+        $("#assignBtn").click(function () {
+            // 1、收集树形结构中被勾选的节点
+            // 声明一个数组存放被勾选的节点 id
+            var authIdArray = [];
+            // 获取zTreeobj 对象
+            var zTreeObj = $.fn.zTree.getZTreeObj("authTreeDemo");
+            // 获取全部被勾选的节点
+            var checkedNodes = zTreeObj.getCheckedNodes();
+            // 遍历数组
+            for (let i = 0; i < checkedNodes.length; i++) {
+                var checkedNode = checkedNodes[i];
+                var authId = checkedNode.id;
+                authIdArray.push(authId);
+            }
+            // 2、发送请求执行分配
+            var requestBody = {
+                "authIdArray": authIdArray,
+                "roleId": [window.roleId]
+            }
+            requestBody = JSON.stringify(requestBody);
+            $.ajax({
+                url: "assign/doRoleAssignToAuth",
+                type: "post",
+                data: requestBody,
+                contentType: "application/json;charset=UTF-8",
+                dataType: "json",
+                success: function (response) {
+                    var result = response.result;
+                    if (result === "SUCCESS") {
+                        layer.msg("操作成功~~~")
+                    }
+                    if (result === "FAILED") {
+                        layer.msg("操作失败~~~" + response.message)
+                    }
+                },
+                error: function (response) {
+                    layer.msg(response.status + " " + response.statusText);
+                }
+            })
+            $("#assignModal").modal("hide")
         })
     })
 </script>
@@ -172,8 +269,9 @@
                                 class="glyphicon glyphicon-search"></i> 查询
                         </button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
-                            class=" glyphicon glyphicon-remove"></i> 删除
+                    <button id="batchDelete" type="button" class="btn btn-danger" style="float:right;margin-left:10px;">
+                        <i
+                                class=" glyphicon glyphicon-remove"></i> 删除
                     </button>
                     <button id="addBtn" type="button" class="btn btn-primary" style="float:right"><i
                             class="glyphicon glyphicon-plus"></i> 新增
@@ -210,4 +308,5 @@
 <%@include file="modal-role-add.jsp" %>
 <%@include file="modal-role-edit.jsp" %>
 <%@include file="modal-role-confirmDelete.jsp" %>
+<%@include file="modal-role-assign-auth.jsp" %>
 </html>

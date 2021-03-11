@@ -3,7 +3,6 @@ package com.wen.crowd.service;
 import com.github.pagehelper.PageInfo;
 import com.wen.crowd.entity.Admin;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -32,4 +31,6 @@ public interface AdminService {
 	Admin getAdminById(Integer adminId);
 
 	void updateAdmin(Admin admin);
+
+    void saveAdminRoleRelation(Integer adminId, List<Integer> roleIdList);
 }

@@ -2,6 +2,7 @@ package com.wen.crowd.mapper;
 
 import com.wen.crowd.entity.Admin;
 import com.wen.crowd.entity.AdminExample;
+import com.wen.crowd.entity.Role;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -31,4 +32,8 @@ public interface AdminMapper {
 
 	/*自己声明的方法*/
 	List<Admin> selectAdminByKeyword(@Param("keyword") String keyword);
+
+    void deleteOldRelation(Integer adminId);
+
+	void insertNewRelation(@Param("adminId") Integer adminId, @Param("roleIdList") List<Integer> roleIdList);
 }

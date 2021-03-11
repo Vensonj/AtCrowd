@@ -1,3 +1,76 @@
+// 创建用于装载auth树形结构的数据函数
+function fillAuthTree() {
+    // 1、发送 Ajax 请求 Auth 数据
+    var ajaxResult = $.ajax({
+        "url": "assign/getAllAuth",
+        "type": "POST",
+        "dataType": "JSON",
+        "async": false,
+    });
+
+    if (ajaxResult.status !== 200) {
+        layer.msg("请求处理出错!响应状态码是：" + ajaxResult.status + "说明是：" + ajaxResult.statusText);
+        return;
+    }
+    // 2、从响应结果中获取 auth 的json数据,并将数据交给 zTree 组装
+    var authList = ajaxResult.responseJSON.data;
+
+    // 3、对zTree进行组装的设置，默认是不组装，即为false
+    var setting = {
+        "data": {
+            "simpleData": {
+                "enable": true,
+                "idKey": "id",
+                // 使用 categoryId 关联父节点，取代 默认的 pId
+                "pIdKey": "categoryId"
+            },
+            "key": {
+                // 使用 title 属性替换默认的 name 属性
+                "name": "title"
+            }
+        },
+        "check": {
+            "enable": true,
+        }
+    };
+    // 4、生成树形结构
+    $.fn.zTree.init($("#authTreeDemo"), setting, authList);
+
+    // 调用 zTreeObj 对象的方法，展开所有的节点
+    var zTreeObj = $.fn.zTree.getZTreeObj("authTreeDemo");
+    zTreeObj.expandAll(true);
+
+    // 5、查询已分配的 auth 的 id 组成的数组
+    var ajaxReturn = $.ajax({
+        "url": "assign/getAssignedAuthIdByRoleId",
+        "type": "POST",
+        "data": {
+            "roleId": window.roleId
+        },
+        "dataType": "JSON",
+        "async": false,
+    })
+
+    if (ajaxReturn.status !== 200) {
+        layer.msg("请求处理出错!响应状态码是：" + ajaxReturn.status + "说明是：" + ajaxReturn.statusText);
+        return;
+    }
+    var authIdList = ajaxReturn.responseJSON.data;
+
+    // 6、根据数组中的内容将树形结构中相应的节点勾选
+    for (let i = 0; i < authIdList.length; i++) {
+        var authId = authIdList[i];
+
+        var treeNode = zTreeObj.getNodeByParam("id", authId);
+        // checked 设置为 true 表示节点勾选
+        // checkTypeFlag 设置为 false 表示 不联动，即是为了避免勾选了不该勾选的
+        var checked = true;
+        var checkTypeFlag = false;
+        zTreeObj.checkNode(treeNode, checked, checkTypeFlag);
+
+    }
+}
+
 // 创建用于显示确认删除角色信息时的提示模态框
 function confirmDelete(roleArray) {
     // 打开模态框
@@ -13,8 +86,7 @@ function confirmDelete(roleArray) {
         var role = roleArray[i];
         var roleId = role.roleId;
         var roleName = role.roleName;
-        $("#confirmDeleteMessage").append(roleId + "&nasp"+roleName + "<br/>")
-
+        $("#confirmDeleteMessage").append(roleName + "<br/>")
         window.roleIdArray.push(roleId);
     }
 }
@@ -67,9 +139,9 @@ function fillTBody(pageInfo) {
         var roleId = role.id;
         var roleName = role.name;
         var numberTd = "<td>" + (i + 1) + "</td>";
-        var checkboxTd = "<td><input type='checkbox'></td>";
+        var checkboxTd = "<td><input id='" + roleId + "' class='itemBox' type='checkbox'></td>";
         var roleNameTd = "<td>" + roleName + "</td>";
-        var checkBtn = "<button type='button' class='btn btn-success btn-xs'><i class='glyphicon glyphicon-check'></i></button>";
+        var checkBtn = "<button id='" + roleId + "' type='button' class='btn btn-success btn-xs checkBtn'><i class='glyphicon glyphicon-check'></i></button>";
         var pencilBtn = "<button id='" + roleId + "' type='button' class='btn btn-primary btn-xs pencilBtn'><i class='glyphicon glyphicon-pencil'></i></button>";
         var removeBtn = "<button id='" + roleId + "' type='button' class='btn btn-danger btn-xs removeBtn'><i class='glyphicon glyphicon-remove'></i></button>";
         var buttonTd = "<td>" + checkBtn + " " + pencilBtn + " " + removeBtn + "</td>";

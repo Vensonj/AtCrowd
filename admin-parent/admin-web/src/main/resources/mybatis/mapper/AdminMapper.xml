@@ -77,9 +77,9 @@
         <include refid="Base_Column_List"/>
         from admin
         where
-            login_acct like concat('%',#{keyword},'%') or
-            user_name like concat('%',#{keyword},'%') or
-            email like concat('%',#{keyword},'%')
+        login_acct like concat('%',#{keyword},'%') or
+        user_name like concat('%',#{keyword},'%') or
+        email like concat('%',#{keyword},'%')
     </select>
     <select id="selectByExample" parameterType="com.wen.crowd.entity.AdminExample" resultMap="BaseResultMap">
         select
@@ -101,6 +101,11 @@
         from admin
         where id = #{id,jdbcType=INTEGER}
     </select>
+    <delete id="deleteOldRelation">
+        delete
+        from inner_admin_role
+        where admin_id = #{adminId}
+    </delete>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
         delete
         from admin
@@ -112,9 +117,13 @@
             <include refid="Example_Where_Clause"/>
         </if>
     </delete>
+    <insert id="insertNewRelation">
+        insert into inner_admin_role(admin_id, role_id) VALUES
+        <foreach collection="roleIdList" item="roleId" separator=",">(#{adminId},#{roleId})</foreach>
+    </insert>
     <insert id="insert" parameterType="com.wen.crowd.entity.Admin">
         insert into admin (id, login_acct, user_pwd,
-                             user_name, email, create_time)
+                           user_name, email, create_time)
         values (#{id,jdbcType=INTEGER}, #{loginAcct,jdbcType=VARCHAR}, #{userPwd,jdbcType=CHAR},
                 #{userName,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{createTime,jdbcType=CHAR})
     </insert>

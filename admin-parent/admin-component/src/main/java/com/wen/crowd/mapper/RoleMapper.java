@@ -2,8 +2,9 @@ package com.wen.crowd.mapper;
 
 import com.wen.crowd.entity.Role;
 import com.wen.crowd.entity.RoleExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface RoleMapper {
     long countByExample(RoleExample example);
@@ -29,4 +30,8 @@ public interface RoleMapper {
     int updateByPrimaryKey(Role record);
 
     List<Role> selectRoleByKeyword(@Param("keyword") String keyword);
+
+    List<Role> selectAssignedRole(Integer adminId);
+
+    List<Role> selectUnAssignedRole(Integer adminId);
 }
