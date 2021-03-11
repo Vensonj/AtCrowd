@@ -135,6 +135,8 @@
             })
             // 关闭模态框
             $("#confirmModal").modal("hide");
+            // 批量删除完成后，将总的单选框取消选中
+            $("#summaryBox").prop("checked",false)
         })
         // 9.给单条删除绑定单击事件
         $("#rolePageBody").on("click", ".removeBtn", function () {
@@ -145,6 +147,45 @@
             }];
             // 弹出更新的模态框
             confirmDelete(roleArray);
+
+        })
+
+        //10.全选
+        $("#summaryBox").click(function () {
+
+            let currentCheckStatus = this.checked;
+            // 用当前多选框的状态设置当前页其他多选框的状态
+            $(".itemBox").prop("checked", currentCheckStatus);
+        })
+        // 11.全选全不选
+        $("#rolePageBody").on("click", ".itemBox", function () {
+            // 当前已选中的Box数量
+            var currentBoxCount = $(".itemBox:checked").length;
+            // 获取当前页全部的BoxCount
+            var totalBoxCount = $(".itemBox").length;
+            // 使用二者的比较结果设置总的Box
+            $("#summaryBox").prop("checked", currentBoxCount === totalBoxCount);
+
+        })
+        // 12.给批量删除的按钮绑定单击事件
+        $("#batchDelete").click(function (){
+            // 声明一个数组来存放已选中的要删除的对象
+            var roleArray = [];
+            // 遍历当前选中的多选框
+            $(".itemBox:checked").each(function (){
+                var roleId = this.id;
+                var roleName = $(this).parent().next().text();
+                roleArray.push({
+                    "roleId":roleId,
+                    "roleName":roleName
+                })
+            })
+            // 检查roleArray的长度是否为 0
+            if (roleArray.length === 0){
+                layer.msg("请至少选择一个删除！！！")
+                return;
+            }
+            confirmDelete(roleArray)
 
         })
     })
@@ -172,7 +213,7 @@
                                 class="glyphicon glyphicon-search"></i> 查询
                         </button>
                     </form>
-                    <button type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
+                    <button id="batchDelete" type="button" class="btn btn-danger" style="float:right;margin-left:10px;"><i
                             class=" glyphicon glyphicon-remove"></i> 删除
                     </button>
                     <button id="addBtn" type="button" class="btn btn-primary" style="float:right"><i
@@ -185,7 +226,7 @@
                             <thead>
                             <tr>
                                 <th width="30">#</th>
-                                <th width="30"><input type="checkbox"></th>
+                                <th width="30"><input id="summaryBox" type="checkbox"></th>
                                 <th>名称</th>
                                 <th width="100">操作</th>
                             </tr>

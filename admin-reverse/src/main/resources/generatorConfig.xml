@@ -43,6 +43,6 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!--生成对应表及类名,enableXXX:XXX代表多种SQL方法，该属性用来指定是否生成对应的XXX语句-->
-        <table tableName="role" domainObjectName="Role"/>
+        <table tableName="menu" domainObjectName="Menu"/>
     </context>
 </generatorConfiguration>
